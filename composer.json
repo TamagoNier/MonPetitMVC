@@ -1,0 +1,17 @@
+{
+    "name": "vendor/mon-petit-m-v-c",
+    "description": "Description of project MonPetitMVC.",
+    "authors": [
+        {
+            "name": "egor.gututui",
+            "email": "egor-gut@outlook.fr"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "App\\":"src",
+            "Tools\\":"tools"
+        }
+    }
+}

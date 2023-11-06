@@ -29,6 +29,11 @@ class ComposerStaticInitcf348a4949ad307d249b2a21085e433d
     );
 
     public static $classMap = array (
+        'App\\Controller\\GestionClientController' => __DIR__ . '/../..' . '/src/Controller/GestionClientController.php',
+        'App\\Entity\\Client' => __DIR__ . '/../..' . '/src/Entity/Client.php',
+        'App\\Entity\\Commande' => __DIR__ . '/../..' . '/src/Entity/Commande.php',
+        'App\\Exceptions\\AppException' => __DIR__ . '/../..' . '/src/Exceptions/AppException.php',
+        'App\\Model\\GestionClientModel' => __DIR__ . '/../..' . '/src/Model/GestionClientModel.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Tools\\Connexion' => __DIR__ . '/../..' . '/tools/Connexion.php',
     );

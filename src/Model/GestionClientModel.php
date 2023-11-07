@@ -27,4 +27,11 @@ class GestionClientModel {
             throw new AppException("Erreur technique inattendue") ;
         }
     }
+    
+    public function findAll() :array {
+        $unObjetPdo = Connexion::getConnexion();
+        $sql = "select * from CLIENT";
+        $lignes = $unObjetPdo->query($sql);
+        return $lignes->fetchAll(PDO::FETCH_CLASS, Client::class);
+    }
 }

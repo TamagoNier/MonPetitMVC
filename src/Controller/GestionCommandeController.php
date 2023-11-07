@@ -1,11 +1,10 @@
 <?php
-
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/PHPClass.php to edit this template
- */
+declare (strict_types=1);
 
 namespace App\Controller;
+use App\Model\GestionCommandeModel;
+use ReflectionClass;
+use App\Exceptions\AppException;
 
 /**
  * Description of GestionCommandeController
@@ -13,5 +12,17 @@ namespace App\Controller;
  * @author egor_
  */
 class GestionCommandeController {
-    //put your code here
+    
+    public function chercheUne(array $params) {
+        //Appel de la méthode find($id)de la classe Model adequate
+        $modele = new GestionCommandeModel();
+        $id = filter_var(intval($params["id"]), FILTER_VALIDATE_INT);
+        $uneCommande = $modele->find($id);
+        if($uneCommande){
+            $r = new ReflectionClass($this);
+            include_once PATH_VIEW . str_replace('Controller', 'View', $r->getShortName()) . "/uneCommande.php";
+        }else{
+            throw new AppException("Commande ". $id. " inconnu");
+        }
+    }
 }

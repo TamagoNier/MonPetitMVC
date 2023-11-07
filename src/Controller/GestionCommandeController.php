@@ -25,4 +25,16 @@ class GestionCommandeController {
             throw new AppException("Commande ". $id. " inconnu");
         }
     }
+    
+    public function chercheToutes(){
+        // Appel la methode findAll() de la classe Model adequate
+        $modele = new GestionCommandeModel();
+        $clients = $modele->findAll();
+        if($clients){
+            $r = new ReflectionClass($this);
+            include_once PATH_VIEW . str_replace('Controller', 'View', $r->getShortName()). "/plusieursCommandes.php";
+        }else{
+            throw new AppException("Aucun Commande à afficher");
+        }
+    }
 }

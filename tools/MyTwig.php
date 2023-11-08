@@ -6,6 +6,7 @@
  */
 
 namespace Tools;
+
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
@@ -25,7 +26,6 @@ abstract class MyTwig {
             'debug' => true,
         ]);
         $environementTwig->addExtension(new DebugExtension());
-        
         return $environementTwig;
     }
     

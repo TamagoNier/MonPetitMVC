@@ -2,6 +2,7 @@
 declare (strict_types=1);
 
 namespace App\Controller;
+use Tools\MyTwig;
 use App\Model\GestionClientModel;
 use ReflectionClass;
 use App\Exceptions\AppException;
@@ -21,7 +22,8 @@ class GestionClientController {
         $unClient = $modele->find($id);
         if($unClient){
             $r = new ReflectionClass($this);
-            include_once PATH_VIEW . str_replace('Controller', 'View', $r->getShortName()) . "/unClient.php";
+            $vue = str_replace('Controller', 'View', $r->getShortName()). "/unClient.html.twig";
+            MyTwig::afficheVue($vue, array('unClient'=>$unClient));
         }else{
             throw new AppException("Client ". $id. " inconnu");
         }
@@ -33,7 +35,8 @@ class GestionClientController {
         $clients = $modele->findAll();
         if($clients){
             $r = new ReflectionClass($this);
-            include_once PATH_VIEW . str_replace('Controller', 'View', $r->getShortName()). "/plusieursClients.php";
+            $vue = str_replace('Controller', 'View', $r->getShortName()). "/tousClients.html.twig";
+            MyTwig::afficheVue($vue, array('Clients'=>$clients));
         }else{
             throw new AppException("Aucun Client à afficher");
         }

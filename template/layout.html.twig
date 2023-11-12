@@ -1,14 +1,13 @@
-{# empty Twig template #}
-<html>
+<! doctype html>
+<htm1>
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-salce=1.0">
-        <title>{{ title }}</title>
+        {% block header %} {% include 'header.html.twig' %} {% endblock %}
     </head>
     <body>
-        {% block contenu %}{% endblock %}
+        {% block navbar %}{% include 'navbar.html.twig' %} {% endblock %}
+        {% block contenu %} {% endblock %}
     </body>
     <footer>
-        {% block footer %} <p> Mentions légales </p> {% endblock %}
-    </footer>
-</html>
+        {% block footer %}{% include 'footer.html.twig' %} {% endblock %}
+</footer>
+</htm1>

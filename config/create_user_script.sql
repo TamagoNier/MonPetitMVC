@@ -1,3 +1,4 @@
+
 CREATE USER 'dbcreator'@'localhost' IDENTIFIED BY 'dbcreator';
 commit;
 GRANT create, references, drop, alter ON *.* TO 'dbcreator'@'localhost';

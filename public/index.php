@@ -23,11 +23,14 @@ try {
         throw new Error("Le contrôleur demandé n'existe pas");
     }
 } catch (Error $ex) {
+    echo $ex;
    include(PATH_VIEW . '/errors/error.html');
 } catch (AppException $ex) {
+    echo $ex;
     include(PATH_VIEW . '/errors/error.html');     
 } catch (Exception $ex) {
-     include(PATH_VIEW . '/errors/error.html');
+    echo $ex;
+    include(PATH_VIEW . '/errors/error.html');
 } 
 
     

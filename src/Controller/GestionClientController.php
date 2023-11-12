@@ -6,6 +6,7 @@ use Tools\MyTwig;
 use App\Model\GestionClientModel;
 use ReflectionClass;
 use App\Exceptions\AppException;
+use App\Entity\Client;
 
 
 /**
@@ -43,17 +44,17 @@ class GestionClientController {
     }
     
     public function creerClient(array $params){
-        $vue = "GestionClientView\\creerClient.html.twig";
+        $vue = "GestionClientView\creerClient.html.twig";
         MyTwig::afficheVue($vue, array());
     }
     
     public function enregistreClient(array $params) {
         try{
             //creation dde l'objet client à partir du form 
-            $client = new Clien($params);
-            $modele=new GestionClientModel();
+            $client = new Client($params);
+            $modele = new GestionClientModel();
             $modele->enregistreClient($client);
-        } catch (Exception $ex) {
+        } catch (Exception) {
             throw new AppException("Erreur de l'enregistrement d'un nouveau client");
         }
     }

@@ -19,15 +19,23 @@ class GestionClientController {
     public function chercheUn(array $params) {
         //Appel de la méthode find($id)de la classe Model adequate
         $modele = new GestionClientModel();
-        $id = filter_var(intval($params["id"]), FILTER_VALIDATE_INT);
-        $unClient = $modele->find($id);
-        if($unClient){
-            $r = new ReflectionClass($this);
-            $vue = str_replace('Controller', 'View', $r->getShortName()). "/unClient.html.twig";
-            MyTwig::afficheVue($vue, array('unClient'=>$unClient));
-        }else{
-            throw new AppException("Client ". $id. " inconnu");
+        //on recupere tous les id des clients
+        $ids = $modele->findIds();
+        //on place les ids trouves dans le tableau de parapetres à envoyer à la vue
+        $params['lesId'] = $ids;
+        //on teste si l'id du client à cherhcehr à été passé dans l'url
+        if(array_key_exists('id', $params)){
+            $id = filter_var(intval($params['id']), FILTER_VALIDATE_INT);
+            $unClient= $modele->find($id);
+            if($unClient){
+                $params['unClient'] = $unClient; //Client Trouvé
+            }else{
+                $parmas['message'] = "Client ".$id." inconnu";
+            }
         }
+        $r = new ReflectionClass($this);
+        $vue = str_replace('Controller', 'View', $r->getShortName()) . "/unClient.html.twig";
+        MyTwig::afficheVue($vue, $params);
     }
     
     public function chercheTous(){
@@ -54,6 +62,7 @@ class GestionClientController {
             $client = new Client($params);
             $modele = new GestionClientModel();
             $modele->enregistreClient($client);
+            header('Location: ?c=gestionClient&a=ChercheUn');
         } catch (Exception) {
             throw new AppException("Erreur de l'enregistrement d'un nouveau client");
         }

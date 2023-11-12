@@ -1,6 +1,15 @@
 {% extends "layout.html.twig" %}
 {% block contenu %}
-    <p><h2> Informations du Client numéro {{ unClient.getNoCli() }} </h2></p>
+    {% if unClient %}
+        {% set idClient = unClient.getId() %}
+    {% endif %}
+    {% block recherche %}
+        {% include 'recherche.html.twig' %}
+    {% endblock %}
+    {% if unClient %}
+
+
+        <p><h2> Informations du Client numéro {{ unClient.getNoCli() }} </h2></p>
     <p>{{ unClient.getPrenomCli() }} {{ unClient.getNomCli() }}</p>
     <p>{{ unClient.getAdresseRue1Cli() }}</p>
     {% if unClient.getAdresseRue2Cli() %}
@@ -8,6 +17,9 @@
     {% endif %}
     <p>{{ unClient.getCpCli() }} {{ unClient.getVilleCli() }}</p>
     <p>{{ unClient.getTelCli() }}</p>
+{% else %}
+
+{% endif %}
 {% endblock %}
 {% block footer %}
     {{ parent() }}

@@ -3,6 +3,8 @@ declare (strict_types=1);
 
 namespace App\Repository;
 
-class ClientRepository {
-    //put your code here
+use Tools\Repository;
+
+class ClientRepository extends Repository {
+    
 }

@@ -2,15 +2,16 @@
 declare (strict_types=1);
 namespace Tools;
 
+use App\Entity\Client;
 use Tools\Connexion;
 use PDO;
 
 abstract class Repository {
 
-    private string $classeNameLong;
-    private string $classeNamespace;
-    private string $table;
-    private PDO $connexion;
+    protected string $classeNameLong;
+    protected string $classeNamespace;
+    protected string $table;
+    protected PDO $connexion;
     
     private function __construct(string $entity) {
         $tablo = explode("\\", $entity);
@@ -33,16 +34,31 @@ abstract class Repository {
         return $lignes->fetchAll();
     }
     
-    public function find(int $id): Client {
+    public function find(int $id): object | bool{
         try{
-            $unObjetPdo = Connexion::getConnexion();
             $sql = "select * from ". $this->table ." where id =:id";
-            $ligne = $unObjetPdo->prepare($sql);
+            $ligne = $this->connexion->prepare($sql);
             $ligne->bindValue(':id', $id, PDO::PARAM_INT);
             $ligne->execute();
-            return $ligne->fetchObject(Client::class);
+            return $ligne->fetchObject($this->classeNameLong);
         } catch (Exception) {
             throw new AppException("Erreur technique inattendue") ;
+        }
+    }
+    
+    public function findIds() : array{
+        try {
+            $sql = "select id from " . $this->table;
+            $lignes = $this->connexion->query($sql);
+            // on va configurer le mode objet pour la lisibilité du code
+            if($lignes->rowCount() > 0) {
+                $t = $lignes->fetchAll(PDO::FETCH_ASSOC);
+                return $t;
+            }else{
+                throw new AppException('Aucun element trouvé');
+            }
+        } catch (PDOException) {
+            throw new AppException("Erreur technique inattendue");
         }
     }
 }

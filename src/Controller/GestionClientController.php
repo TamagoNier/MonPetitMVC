@@ -18,20 +18,20 @@ use App\Entity\Client;
 class GestionClientController {
     
     public function chercheUn(array $params) {
-        //Appel de la méthode find($id)de la classe Model adequate
-        $modele = new GestionClientModel();
+        // Recuperation d'un objet ClientRepository
+        $repository = Repository::getRepository("App\Entity\Client");
         //on recupere tous les id des clients
-        $ids = $modele->findIds();
+        $ids = $repository->findIds();
         //on place les ids trouves dans le tableau de parapetres à envoyer à la vue
         $params['lesId'] = $ids;
-        //on teste si l'id du client à cherhcehr à été passé dans l'url
+        //on teste si l'id du client à cherhcher à été passé dans l'url
         if(array_key_exists('id', $params)){
             $id = filter_var(intval($params['id']), FILTER_VALIDATE_INT);
-            $unClient= $modele->find($id);
+            $unClient= $repository->find($id);
             if($unClient){
                 $params['unClient'] = $unClient; //Client Trouvé
             }else{
-                $parmas['message'] = "Client ".$id." inconnu";
+                $params['message'] = "Client ".$id." inconnu";
             }
         }
         $r = new ReflectionClass($this);
@@ -61,8 +61,8 @@ class GestionClientController {
         try{
             //creation dde l'objet client à partir du form 
             $client = new Client($params);
-            $modele = new GestionClientModel();
-            $modele->enregistreClient($client);
+            $repository = Repository::getRepository("App\Entity\Client");
+            $repository->enregistreClient($client);
             header('Location: ?c=gestionClient&a=ChercheUn');
         } catch (Exception) {
             throw new AppException("Erreur de l'enregistrement d'un nouveau client");

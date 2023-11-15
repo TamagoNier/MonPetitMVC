@@ -36,6 +36,13 @@
 </table>
 <p>Nombre de Client : {{ Clients|length }}</p>
         
+<style>
+    table {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+}
+</style>
 {% endblock %}
 {% block footer %}
     {{ parent() }}

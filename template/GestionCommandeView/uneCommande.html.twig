@@ -1,0 +1,25 @@
+{% extends "layout.html.twig" %}
+{% block contenu %}
+    {% if uneCommande %}
+        {% set idCommande = uneCommande.getId() %}
+    {% endif %}
+    
+    {% block recherche %}
+        {% include './GestionCommandeView/rechercheCommande.html.twig' %}
+    {% endblock %}
+    
+    {% if message %}
+            <div class="text-center">{{ message }}</div>
+    {% endif %}
+    
+    {% if uneCommande %}
+        <p><h2> Informations sur la commande {{ uneCommandeId }} </h2></p>
+    <p>Le Client de la Commande : {{ uneCommande.getIdClient() }}</p>
+    <p>Date de Commande : {{ uneCommande.getDateCde() }}</p>
+    <p>Numéro de Facture : {{ uneCommande.getNoFacture() }}</p>
+    {% endif %}
+{% endblock %}
+{% block footer %}
+    {{ parent() }}
+    <div class="text-center">Fin de l'affichage</div>
+{% endblock %}

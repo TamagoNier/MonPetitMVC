@@ -1,0 +1,40 @@
+{% extends "layout.html.twig" %}
+
+{% block contenu %}
+      
+    <p><h2> Liste des commandes </h2></p>
+
+<table>
+    <tr>
+        
+    <th scope="col">Id</th>
+    <th scope="col">Id du Client</th>
+    <th scope="col">Date de Commande</th>
+    <th scope="col">Num de Facture</th>
+    </tr>
+    
+    
+    {% for uneCommande in Commandes %}
+        <tr>
+        <td>{{ uneCommande.getId() }}</td>
+        <td>{{ uneCommande.getIdClient() }}</td> 
+        <td>{{ uneCommande.getDateCde() }}</td>
+        <td>{{ uneCommande.getNoFacture() }}</td>
+        </tr>
+    {% endfor %}
+</table>
+<div>Nombre de Commandes : {{ Commandes|length }}</div>
+
+<style>
+    table {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+}
+</style>
+{% endblock %}
+
+{% block footer %}
+    {{ parent() }}
+    <div class="text-center">Fin de l'affichage</div>
+{% endblock %}

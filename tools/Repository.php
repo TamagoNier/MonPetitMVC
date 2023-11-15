@@ -1,5 +1,7 @@
 <?php
+
 declare (strict_types=1);
+
 namespace Tools;
 
 use App\Entity\Client;
@@ -12,7 +14,7 @@ abstract class Repository {
     protected string $classeNamespace;
     protected string $table;
     protected PDO $connexion;
-    
+
     private function __construct(string $entity) {
         $tablo = explode("\\", $entity);
         $this->table = array_pop($tablo);
@@ -20,41 +22,46 @@ abstract class Repository {
         $this->classeNameLong = $entity;
         $this->connexion = Connexion::getConnexion();
     }
-    
-    public static function getRepository(string $entity): Repository{
+
+    public static function getRepository(string $entity): Repository {
         $repositoryName = str_replace('Entity', 'Repository', $entity) . 'Repository';
         $repository = new $repositoryName($entity);
         return $repository;
     }
-    
-    public function findAll() : array{
-        $sql = "select * from ".$this->table;
-        $lignes= $this->connexion->query($sql);
+
+    public function findAll(): array {
+        $sql = "select * from " . $this->table;
+        $lignes = $this->connexion->query($sql);
         $lignes->setFetchMode(PDO::FETCH_CLASS, $this->classeNameLong, null);
         return $lignes->fetchAll();
     }
-    
-    public function find(int $id): object | bool{
-        try{
-            $sql = "select * from ". $this->table ." where id =:id";
+
+    public function find(int $id): ?object {
+        try {
+            $sql = "select * from " . $this->table . " where id =:id";
             $ligne = $this->connexion->prepare($sql);
             $ligne->bindValue(':id', $id, PDO::PARAM_INT);
             $ligne->execute();
-            return $ligne->fetchObject($this->classeNameLong);
+            $resultat = $ligne->fetchObject($this->classeNameLong);
+            if($resultat) {
+                return $resultat;
+            } else {
+                return null;
+            }
         } catch (Exception) {
-            throw new AppException("Erreur technique inattendue") ;
+            throw new AppException("Erreur technique inattendue");
         }
     }
-    
-    public function findIds() : array{
+
+    public function findIds(): array {
         try {
             $sql = "select id from " . $this->table;
             $lignes = $this->connexion->query($sql);
             // on va configurer le mode objet pour la lisibilité du code
-            if($lignes->rowCount() > 0) {
+            if ($lignes->rowCount() > 0) {
                 $t = $lignes->fetchAll(PDO::FETCH_ASSOC);
                 return $t;
-            }else{
+            } else {
                 throw new AppException('Aucun element trouvé');
             }
         } catch (PDOException) {

@@ -131,8 +131,24 @@ abstract class Repository {
     }
     
     public function findColumnDistinctValues(string $colonne): array {
-        $sql = "select distict ". colonne . " libelle from ".$this->table." Order by 1";
+        $sql = "select distinct ". $colonne . " from ".$this->table." order by 1";
         $tab = $this->connexion->query($sql)->fetchAll(PDO::FETCH_COLUMN);
-        return tab;
+        return $tab;
+    }
+    
+    public function findBy(array $params) {
+        $element = "Choisir ... ";
+        while(in_array($element, $params)) {
+            unset($params[array_search($element, $params)]);
+        }
+        $cles = array_keys($params) ;
+        $methode = "findBy";
+        for($i = 0; $i < count($cles); $i++) {
+            if ($i > 0) {
+                $methode .= " and ";
+            }
+            $methode .= $cles[$i];
+        }
+        return $this->traiteFindBy($methode,array_values($params));
     }
 }

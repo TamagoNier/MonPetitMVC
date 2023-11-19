@@ -108,5 +108,59 @@ class GestionClientController {
         MyTwig::afficheVue($vue, array('Clients' => $clients));
     }
     
+    public function rechercheClients(array $params) : void {
+        $repository = Repository::getRepository("App\Entity\Client") ;
+        $titres = $repository->findColumnDistinctValues('titreCli');
+        $cps = $repository->findColumnDistinctValues('cpCli');
+        $villes = $repository->findColumnDistinctValues('villeCli');
+        $paramsVue ['titres'] = $titres;
+        $paramsVue['cps'] = $cps;
+        $paramsVue ['villes'] = $villes;
+        
+        //Gestion de retour du formulaire
+        //On va d'abord filtrer et preparer le retour du formulaire avec la 
+        //fonction verifieEtPrepareCriteres
+        $criteresPrepares = $this->verifieEtPrepareCriteres($params);
+        
+        if(count($criteresPrepares)>0) {
+            $clients = $repository->findBy($params);
+            $paramsVue['Clients'] = $clients;
+            foreach($criteresPrepares as $valeur) {
+                ($valeur!= "Choisir...") ? ($criteres[]=$valeur):(null);
+            }
+            $paramsVue['criteres'] = $criteres;
+            $vue = "GestionClientView\\tousClients.html.twig"; 
+            MyTwig::afficheVue($vue, $paramsVue);
+        }
+        else{
+            $vue = "GestionClientView\\filtreClients.html.twig";
+            MyTwig::afficheVue($vue, $paramsVue);
+        }       
+    }
+    
+    public function verifieEtPrepareCriteres(array $params) : array {
+        $args = array(
+            'titreCli' => array(
+                'filter' => FILTER_VALIDATE_REGEXP | FILTER_SANITIZE_SPECIAL_CHARS,
+                'flags' => FILTER_NULL_ON_FAILURE,
+                'options' => array ('regexp' => '/^(Monsieur | Madame | Mademoiselle)$/')
+            ),
+            'cpCli' => array(
+                'filter' => FILTER_VALIDATE_REGEXP | FILTER_SANITIZE_SPECIAL_CHARS,
+                'flags' => FILTER_NULL_ON_FAILURE,
+                'options' => array ('regexp' => "/[0-9](5)/")
+            ),
+            'villeCli' => FILTER_SANITIZE_SPECIAL_CHARS,
+        );
+        $retour = filter_var_array($params, $args, false);
+        if (isset($retour['titreCli']) || isset($retour ['cpCli']) || isset($retour ['villecli'])) {
+            // c'est le retour du formulaire de choix de filtre
+            $element = "Choisir ... ";
+            while (in_array($element, $retour)) {
+                unset($retour[array_search($element, $retour)]);
+            }
+        }
+        return $retour;
+    }
     
 }

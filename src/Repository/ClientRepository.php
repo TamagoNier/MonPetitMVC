@@ -13,7 +13,7 @@ class ClientRepository extends Repository {
         $sql = "select client.id, client.nomCli, client.prenomCli, client.villeCli,"
                 . " count(commande.idClient) as nbCommandes"
                 . " from client"
-                . " inner join commande on client.id = commande.idClient"
+                . " left join commande on client.id = commande.idClient"
                 . " group by client.id, client.nomCli, client.prenomCli, client.villeCli"
                 . " order by nbCommandes desc, client.nomCli ";
         return $this->executeSQL($sql);

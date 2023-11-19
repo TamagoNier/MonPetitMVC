@@ -87,7 +87,7 @@ class GestionClientController {
         echo "Nombre de clients : " . $nbClients;
     }
     
-    public function statsClients($params) {
+    public function statsClients(array $params) {
         $repositoryClient = Repository::getRepository("App\Entity\Client");
         $clientStats = $repositoryClient->statistiquesTousClients();
         if($clientStats){
@@ -98,5 +98,15 @@ class GestionClientController {
             throw new AppException("Aucun clients");
         }
     }
+    
+    public function testFindBy(array $params) :void {
+        $repository = Repository::getRepository("App\Entity\Client");
+        $parametres = array("titreCli"=>"Monsieur", "villeCli" => "Toulon");
+        $clients = $repository->findBytitreCli_and_villeCli($parametres);
+        $r = new ReflectionClass($this);
+        $vue = str_replace('Controller', 'View', $r->getShortName())."/tousClients.html.twig";
+        MyTwig::afficheVue($vue, array('Clients' => $clients));
+    }
+    
     
 }

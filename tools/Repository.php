@@ -28,6 +28,11 @@ abstract class Repository {
         $repository = new $repositoryName($entity);
         return $repository;
     }
+    
+    public function executeSQL(string $sql) : ?array {
+        $resultat = $this->connexion->query($sql);
+        return $resultat->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     public function findAll(): array {
         $sql = "select * from " . $this->table;
@@ -92,4 +97,10 @@ abstract class Repository {
         $req->execute($parametres);
     }
     
+    public function countRows() : int {
+        $sql = "select count(*) from " . $this->table;
+        $lignes = $this->connexion->query($sql);
+        $req = $lignes->fetch();
+        return intval($req[0]);
+    }
 }

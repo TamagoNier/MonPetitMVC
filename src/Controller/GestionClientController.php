@@ -52,20 +52,33 @@ class GestionClientController {
         }
     }
     
-    public function creerClient(array $params){
-        $vue = "GestionClientView\creerClient.html.twig";
-        MyTwig::afficheVue($vue, array());
+    public function creerClient(array $params) : void{
+        if(empty($params)) {
+            $vue = "GestionClientView\creerClient.html.twig";
+            MyTwig::afficheVue($vue, array());
+        }else {
+            try{
+            $params = $this->verificationSaisieClient($params);
+            //creation de l'objet client à partir des données du formulaire
+            $client= new Client($params);
+            $repository = Repository::getRepository("App\Entity\Client");
+            $repository->insert($client);
+            $this->chercheTous();
+        }catch(Exception){
+            throw new AppException("Erreur à l'enregistrement d'un nouveau client");
+    }}}
+    
+    private function verificationSaisieClient($params) : array {
+        $params["nomCli"] = htmlspecialchars($params["nomCli"]);
+        $params["prenomCli"] = htmlspecialchars($params["prenomCli"]);
+        $params["adresseRue1Cli"] = htmlspecialchars($params["adresseRue1Cli"]);
+        if($params["adresseRue2Cli"]){
+            $params["adresseRue2Cli"] = htmlspecialchars($params["adresseRue2Cli"]);
+        }
+        $params["cpCli"] = filter_var($params["cpCli"], FILTER_SANITIZE_NUMBER_INT);
+        $params["villeCli"] = htmlspecialchars($params["villeCli"]);
+        $params["telCli"] = filter_var($params["telCli"], FILTER_SANITIZE_NUMBER_INT);
+        return $params;
     }
     
-    public function enregistreClient(array $params) {
-        try{
-            //creation dde l'objet client à partir du form 
-            $client = new Client($params);
-            $repository = Repository::getRepository("App\Entity\Client");
-            $repository->enregistreClient($client);
-            header('Location: ?c=gestionClient&a=ChercheUn');
-        } catch (Exception) {
-            throw new AppException("Erreur de l'enregistrement d'un nouveau client");
-        }
-    }
 }

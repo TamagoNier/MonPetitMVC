@@ -68,4 +68,28 @@ abstract class Repository {
             throw new AppException("Erreur technique inattendue");
         }
     }
+    
+    public function insert(object $object) : void {
+        // conversion en tableau 
+        $attributs = (array) $object;
+        array_shift($attributs);
+        $colonnes = "(";
+        $colonnesParams = "(";
+        $parametres = array();
+        foreach($attributs as $cle => $valeur){
+            $cle = str_replace("\0", "", $cle);
+            $c = str_replace($this->classeNameLong, "", $cle);
+            if($c != "id"){
+                $colonnes .= $c.",";
+                $colonnesParams .= " ? ,";
+                $parametres[]=$valeur;
+            }
+        }
+        $cols = substr($colonnes, 0, -1);
+        $colsParams = substr($colonnesParams, 0, -1);
+        $sql = "insert into ". $this->table . " " . $cols . ") values" . $colsParams . ")";
+        $req = $this->connexion->prepare($sql);
+        $req->execute($parametres);
+    }
+    
 }
